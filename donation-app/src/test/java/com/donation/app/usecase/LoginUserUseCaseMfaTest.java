@@ -1,6 +1,5 @@
 package com.donation.app.usecase;
 
-import com.donation.app.domain.DonationException;
 import com.donation.app.domain.User;
 import com.donation.app.domain.UserRepository;
 import com.donation.app.infrastructure.jwt.JwtProvider;
@@ -29,7 +28,7 @@ class LoginUserUseCaseMfaTest {
     }
 
     @Test
-    void preLogin_MfaRequired() {
+    void login_MfaRequired() {
         String email = "mfa@example.com";
         String password = "rawPassword";
 
@@ -44,8 +43,8 @@ class LoginUserUseCaseMfaTest {
         when(userRepository.findByEmail(email)).thenReturn(Mono.just(user));
         when(passwordEncoder.matches(password, "encodedPassword")).thenReturn(true);
 
-        StepVerifier.create(loginUserUseCase.preLogin(email, password))
-                .expectNextMatches(result -> result.mfaRequired() && "SMS".equals(result.mfaType()))
+        StepVerifier.create(loginUserUseCase.login(email, password))
+                .expectNextMatches(result -> result.getMfaRequired() && "SMS".equals(result.getMfaType()))
                 .verifyComplete();
     }
 }

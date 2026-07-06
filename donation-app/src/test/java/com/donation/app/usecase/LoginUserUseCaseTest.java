@@ -4,12 +4,15 @@ import com.donation.app.domain.DonationException;
 import com.donation.app.domain.User;
 import com.donation.app.domain.UserRepository;
 import com.donation.app.infrastructure.jwt.JwtProvider;
+import com.donation.app.infrastructure.web.dto.LoginResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
+
+import java.util.UUID;
 
 import static org.mockito.Mockito.when;
 
@@ -29,7 +32,7 @@ class LoginUserUseCaseTest {
     }
 
     @Test
-    void preLogin_Success() {
+    void login_Success() {
         String email = "user@example.com";
         String password = "rawPassword";
 
@@ -44,13 +47,13 @@ class LoginUserUseCaseTest {
         when(passwordEncoder.matches(password, "encodedPassword")).thenReturn(true);
         when(jwtProvider.generateToken(email, "ROLE_USER")).thenReturn("mockedToken");
 
-        StepVerifier.create(loginUserUseCase.preLogin(email, password))
-                .expectNextMatches(result -> !result.mfaRequired() && "mockedToken".equals(result.token()))
+        StepVerifier.create(loginUserUseCase.login(email, password))
+                .expectNextMatches(result -> !result.getMfaRequired() && "mockedToken".equals(result.getToken()))
                 .verifyComplete();
     }
 
     @Test
-    void preLogin_InvalidPassword() {
+    void login_InvalidPassword() {
         String email = "user@example.com";
         String password = "wrongPassword";
 
@@ -63,28 +66,28 @@ class LoginUserUseCaseTest {
         when(userRepository.findByEmail(email)).thenReturn(Mono.just(user));
         when(passwordEncoder.matches(password, "encodedPassword")).thenReturn(false);
 
-        StepVerifier.create(loginUserUseCase.preLogin(email, password))
+        StepVerifier.create(loginUserUseCase.login(email, password))
                 .expectErrorMatches(throwable -> throwable instanceof DonationException &&
                         ((DonationException) throwable).getCode().equals("INVALID_CREDENTIALS"))
                 .verify();
     }
 
     @Test
-    void preLogin_UserNotFound() {
+    void login_UserNotFound() {
         String email = "unknown@example.com";
         String password = "password";
 
         when(userRepository.findByEmail(email)).thenReturn(Mono.empty());
 
-        StepVerifier.create(loginUserUseCase.preLogin(email, password))
+        StepVerifier.create(loginUserUseCase.login(email, password))
                 .expectErrorMatches(throwable -> throwable instanceof DonationException &&
                         ((DonationException) throwable).getCode().equals("INVALID_CREDENTIALS"))
                 .verify();
     }
 
     @Test
-    void preLogin_EmptyArgs() {
-        StepVerifier.create(loginUserUseCase.preLogin("", "password"))
+    void login_EmptyArgs() {
+        StepVerifier.create(loginUserUseCase.login("", "password"))
                 .expectErrorMatches(throwable -> throwable instanceof DonationException &&
                         ((DonationException) throwable).getCode().equals("BAD_REQUEST"))
                 .verify();

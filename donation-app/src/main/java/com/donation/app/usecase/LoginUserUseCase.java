@@ -27,19 +27,17 @@ public class LoginUserUseCase {
                 .flatMap(user -> {
                     if (passwordEncoder.matches(rawPassword, user.getPassword())) {
                         if (user.isMfaEnabled()) {
-                            return Mono.just(LoginResponse.builder()
+                            return Mono.just(new LoginResponse()
                                     .mfaRequired(true)
                                     .mfaType(user.getMfaType())
-                                    .email(user.getEmail())
-                                    .build());
+                                    .email(user.getEmail()));
                         } else {
                             String token = jwtProvider.generateToken(user.getEmail(), user.getRole());
-                            return Mono.just(LoginResponse.builder()
+                            return Mono.just(new LoginResponse()
                                     .mfaRequired(false)
                                     .token(token)
                                     .email(user.getEmail())
-                                    .uuid(user.getUuid())
-                                    .build());
+                                    .uuid(user.getUuid()));
                         }
                     } else {
                         return Mono.error(new DonationException("INVALID_CREDENTIALS", "Invalid email or password"));
@@ -64,12 +62,11 @@ public class LoginUserUseCase {
 
                     if (isValid) {
                         String token = jwtProvider.generateToken(user.getEmail(), user.getRole());
-                        return Mono.just(LoginResponse.builder()
+                        return Mono.just(new LoginResponse()
                                 .mfaRequired(false)
                                 .token(token)
                                 .email(user.getEmail())
-                                .uuid(user.getUuid())
-                                .build());
+                                .uuid(user.getUuid()));
                     } else {
                         return Mono.error(new DonationException("INVALID_CREDENTIALS", "Invalid code"));
                     }

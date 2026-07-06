@@ -6,8 +6,8 @@ spring:
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml
     url: ${SPRING_LIQUIBASE_URL:jdbc:postgresql://localhost:5432/donation_db}
-    user: ${SPRING_DATASOURCE_USERNAME:postgres}
-    password: ${SPRING_DATASOURCE_PASSWORD:mySecurePassword123}
+    user: ${SPRING_LIQUIBASE_USER:postgres}
+    password: ${SPRING_LIQUIBASE_PASSWORD:mySecurePassword123}
     enabled: true
 
   # R2DBC configuration (used by Spring Data R2DBC for reactive work)
@@ -19,6 +19,8 @@ spring:
   # We disable standard JDBC autoconfig to keep the project strictly reactive
   autoconfigure:
     exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+
+
 
 
 # JWT Configuration

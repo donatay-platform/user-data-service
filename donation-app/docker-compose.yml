@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  donation-db:
+    image: postgres:16-alpine
+    container_name: donation-postgres-db
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: donation_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: mySecurePassword123
+    volumes:
+      - donation_db_data:/var/lib/postgresql/data
+
+volumes:
+  donation_db_data:
+    driver: local

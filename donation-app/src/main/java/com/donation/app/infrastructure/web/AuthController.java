@@ -47,17 +47,36 @@ public class AuthController {
     @ApiResponse(responseCode = "401", description = "Неверная почта или пароль")
     public Mono<LoginResponse> login(@Valid @RequestBody AuthRequest request) {
         return loginUserUseCase.preLogin(request.getEmail(), request.getPassword())
-                .map(result -> LoginResponse.builder()
-                        .mfaRequired(result.mfaRequired())
-                        .mfaType(result.mfaType())
-                        .token(result.token())
-                        .build());
+                .flatMap(result -> {
+                    if (result.mfaRequired()) {
+                        return Mono.just(LoginResponse.builder()
+                                .mfaRequired(true)
+                                .mfaType(result.mfaType())
+                                .email(request.getEmail())
+                                .build());
+                    } else {
+                        // Для получения UUID при успешном входе без MFA
+                        return userRepository.findByEmail(request.getEmail())
+                                .map(user -> LoginResponse.builder()
+                                        .mfaRequired(false)
+                                        .token(result.token())
+                                        .email(user.getEmail())
+                                        .uuid(user.getUuid())
+                                        .build());
+                    }
+                });
     }
 
     @PostMapping("/login/verify-mfa")
     @Operation(summary = "Второй шаг авторизации: верификация кода 2FA для входа")
-    public Mono<TokenResponse> verifyMfaAndLogin(@RequestBody MfaVerificationRequest request) {
+    public Mono<LoginResponse> verifyMfaAndLogin(@RequestBody MfaVerificationRequest request) {
         return loginUserUseCase.verifyMfaAndLogin(request.getEmail(), request.getCode())
-                .map(TokenResponse::new);
+                .flatMap(token -> userRepository.findByEmail(request.getEmail())
+                        .map(user -> LoginResponse.builder()
+                                .mfaRequired(false)
+                                .token(token)
+                                .email(user.getEmail())
+                                .uuid(user.getUuid())
+                                .build()));
     }
 }

@@ -10,8 +10,10 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.ReactiveSecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 @RestController
@@ -27,26 +29,31 @@ public class ProfileController implements ProfileApi {
     @Override
     @GetMapping
     @Operation(summary = "Получить профиль текущего авторизованного пользователя")
-    public Mono<UserProfileResponse> getProfile(@AuthenticationPrincipal String email) {
-        return getProfileUseCase.getProfile(email)
-                .map(this::toResponse);
+    public Mono<ResponseEntity<UserProfileResponse>> getProfile(final ServerWebExchange exchange) {
+        return ReactiveSecurityContextHolder.getContext()
+                .map(ctx -> ctx.getAuthentication().getName())
+                .flatMap(getProfileUseCase::getProfile)
+                .map(user -> ResponseEntity.ok(toResponse(user)));
     }
 
     @Override
     @PutMapping
     @Operation(summary = "Редактировать данные профиля")
-    public Mono<UserProfileResponse> updateProfile(
-            @AuthenticationPrincipal String currentEmail,
-            @RequestBody UpdateProfileRequest request) {
-        return updateProfileUseCase.updateProfile(
-                currentEmail,
-                request.getNickname(),
-                request.getAvatarUrl(),
-                request.getHeaderUrl(),
-                request.getEmail(),
-                request.getPassword(),
-                request.getPhoneNumber()
-        ).map(this::toResponse);
+    public Mono<ResponseEntity<UserProfileResponse>> updateProfile(
+            @RequestBody UpdateProfileRequest request,
+            final ServerWebExchange exchange) {
+        return ReactiveSecurityContextHolder.getContext()
+                .map(ctx -> ctx.getAuthentication().getName())
+                .flatMap(currentEmail -> updateProfileUseCase.updateProfile(
+                        currentEmail,
+                        request.getNickname(),
+                        request.getAvatarUrl(),
+                        request.getHeaderUrl(),
+                        request.getEmail(),
+                        request.getPassword(),
+                        request.getPhoneNumber()
+                ))
+                .map(user -> ResponseEntity.ok(toResponse(user)));
     }
 
     private UserProfileResponse toResponse(User user) {

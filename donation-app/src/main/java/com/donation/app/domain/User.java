@@ -9,12 +9,12 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
-@Builder
+@Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
-    private Long id;         // Порядковый номер (Long)
-    private UUID uuid;       // Уникальный идентификатор (UUID)
+    private Long id;
+    private UUID uuid;
     private String email;
     private String password;
     private String role;

@@ -5,9 +5,11 @@ import com.donation.app.infrastructure.web.dto.AppVersionResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 import java.io.InputStream;
@@ -25,7 +27,7 @@ public class VersionController implements VersionApi {
     @GetMapping
     @Operation(summary = "Получить информацию о версии сервиса", 
                description = "Возвращает версию в формате: Мажорная.Релизная.Дата.Время.ХэшКомита")
-    public Mono<AppVersionResponse> getVersion() {
+    public Mono<ResponseEntity<AppVersionResponse>> getVersion(final ServerWebExchange exchange) {
         return Mono.fromCallable(() -> {
             String commitHash = "unknown";
             String buildTime = LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
@@ -48,12 +50,12 @@ public class VersionController implements VersionApi {
 
             String fullVersion = String.format("1.1.%s.%s.%s", formattedDate, formattedTime, commitHash);
 
-            return AppVersionResponse.builder()
+            return ResponseEntity.ok(AppVersionResponse.builder()
                     .name("donation-app")
                     .version(fullVersion)
                     .commitHash(commitHash)
                     .buildTime(buildTime)
-                    .build();
+                    .build());
         });
     }
 }

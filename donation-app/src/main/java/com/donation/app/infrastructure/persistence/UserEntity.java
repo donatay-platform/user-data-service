@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.domain.Persistable;
 import org.springframework.data.relational.core.mapping.Table;
 
 import java.time.LocalDateTime;
@@ -15,7 +16,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table("users")
-public class UserEntity {
+public class UserEntity implements Persistable<UUID> {
     @Id
     private UUID id;
     private String email;
@@ -32,5 +33,14 @@ public class UserEntity {
     private String phoneNumber;
     
     private LocalDateTime createdAt;
-}
 
+    @Override
+    public UUID getId() {
+        return id;
+    }
+
+    @Override
+    public boolean isNew() {
+        return id == null;
+    }
+}

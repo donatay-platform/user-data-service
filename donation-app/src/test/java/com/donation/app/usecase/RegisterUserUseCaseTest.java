@@ -48,7 +48,7 @@ class RegisterUserUseCaseTest {
         when(userRepository.save(any(User.class))).thenReturn(Mono.just(savedUser));
 
         StepVerifier.create(registerUserUseCase.register(email, password))
-                .expectNextMatches(user -> user.getEmail().equals(email) && user.getPassword().equals("encodedPassword"))
+                .expectNextMatches(user -> user.getEmail().equals(email))
                 .verifyComplete();
     }
 

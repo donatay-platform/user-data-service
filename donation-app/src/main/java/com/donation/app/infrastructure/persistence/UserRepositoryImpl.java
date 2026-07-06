@@ -50,8 +50,14 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     private UserEntity toEntity(User user) {
+        UUID id = user.getId();
+        boolean isNew = false;
+        if (id == null) {
+            id = UUID.randomUUID(); // Генерируем UUID в Java, так как R2DBC требует заполненного ID при явном Insert
+            isNew = true;
+        }
         return UserEntity.builder()
-                .id(user.getId())
+                .id(id)
                 .email(user.getEmail())
                 .password(user.getPassword())
                 .role(user.getRole())
@@ -63,7 +69,7 @@ public class UserRepositoryImpl implements UserRepository {
                 .mfaSecret(user.getMfaSecret())
                 .phoneNumber(user.getPhoneNumber())
                 .createdAt(user.getCreatedAt())
-                .isNew(user.getId() == null) // Если ID в домене пустой - значит сущность абсолютно новая
+                .isNew(isNew)
                 .build();
     }
 }

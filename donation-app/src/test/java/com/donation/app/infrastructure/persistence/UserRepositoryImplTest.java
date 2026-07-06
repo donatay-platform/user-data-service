@@ -27,9 +27,11 @@ class UserRepositoryImplTest {
 
     @Test
     void findByEmail_Success() {
-        UUID id = UUID.randomUUID();
+        Long id = 1L;
+        UUID uuid = UUID.randomUUID();
         UserEntity entity = UserEntity.builder()
                 .id(id)
+                .uuid(uuid)
                 .email("test@example.com")
                 .password("encodedPassword")
                 .role("ROLE_USER")
@@ -39,14 +41,16 @@ class UserRepositoryImplTest {
         when(springRepository.findByEmail("test@example.com")).thenReturn(Mono.just(entity));
 
         StepVerifier.create(userRepository.findByEmail("test@example.com"))
-                .expectNextMatches(user -> user.getId().equals(id) && user.getEmail().equals("test@example.com"))
+                .expectNextMatches(user -> user.getId().equals(id) && user.getUuid().equals(uuid))
                 .verifyComplete();
     }
 
     @Test
     void save_Success() {
-        UUID id = UUID.randomUUID();
+        Long id = 1L;
+        UUID uuid = UUID.randomUUID();
         User user = User.builder()
+                .uuid(uuid)
                 .email("test@example.com")
                 .password("encodedPassword")
                 .role("ROLE_USER")
@@ -55,6 +59,7 @@ class UserRepositoryImplTest {
 
         UserEntity savedEntity = UserEntity.builder()
                 .id(id)
+                .uuid(uuid)
                 .email("test@example.com")
                 .password("encodedPassword")
                 .role("ROLE_USER")
@@ -70,9 +75,11 @@ class UserRepositoryImplTest {
 
     @Test
     void findById_Success() {
-        UUID id = UUID.randomUUID();
+        Long id = 1L;
+        UUID uuid = UUID.randomUUID();
         UserEntity entity = UserEntity.builder()
                 .id(id)
+                .uuid(uuid)
                 .email("test@example.com")
                 .password("encodedPassword")
                 .role("ROLE_USER")

@@ -14,8 +14,11 @@ import java.util.UUID;
 @AllArgsConstructor
 @Schema(description = "Полный профиль пользователя")
 public class UserProfileResponse {
-    @Schema(description = "Уникальный идентификатор")
-    private UUID id;
+    @Schema(description = "Порядковый номер")
+    private Long id;
+
+    @Schema(description = "Уникальный внешний UUID")
+    private UUID uuid;
 
     @Schema(description = "Электронная почта")
     private String email;

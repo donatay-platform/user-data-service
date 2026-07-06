@@ -32,7 +32,8 @@ class UpdateProfileUseCaseTest {
     void updateProfile_Success() {
         String currentEmail = "test@example.com";
         User user = User.builder()
-                .id(UUID.randomUUID())
+                .id(1L)
+                .uuid(UUID.randomUUID())
                 .email(currentEmail)
                 .password("oldPassword")
                 .build();

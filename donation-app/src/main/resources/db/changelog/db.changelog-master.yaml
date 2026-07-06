@@ -3,16 +3,26 @@ databaseChangeLog:
       id: 1
       author: expert
       changes:
+        - createSequence:
+            sequenceName: users_id_seq
+            startValue: 1
+            incrementBy: 1
+
         - createTable:
             tableName: users
             columns:
               - column:
                   name: id
-                  type: UUID
+                  type: BIGINT
                   constraints:
                     primaryKey: true
                     nullable: false
-                    defaultValueComputed: "gen_random_uuid()"
+              - column:
+                  name: uuid
+                  type: UUID
+                  constraints:
+                    nullable: false
+                    unique: true
               - column:
                   name: email
                   type: VARCHAR(255)
@@ -58,4 +68,3 @@ databaseChangeLog:
                   type: TIMESTAMP
                   constraints:
                     nullable: false
-

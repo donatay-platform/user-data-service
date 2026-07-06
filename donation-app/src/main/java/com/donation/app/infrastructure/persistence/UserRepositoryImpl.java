@@ -27,14 +27,21 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public Mono<User> findById(UUID id) {
+    public Mono<User> findById(Long id) {
         return springRepository.findById(id)
+                .map(this::toDomain);
+    }
+
+    @Override
+    public Mono<User> findByUuid(UUID uuid) {
+        return springRepository.findByUuid(uuid)
                 .map(this::toDomain);
     }
 
     private User toDomain(UserEntity entity) {
         return User.builder()
                 .id(entity.getId())
+                .uuid(entity.getUuid())
                 .email(entity.getEmail())
                 .password(entity.getPassword())
                 .role(entity.getRole())
@@ -50,14 +57,9 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     private UserEntity toEntity(User user) {
-        UUID id = user.getId();
-        boolean isNew = false;
-        if (id == null) {
-            id = UUID.randomUUID(); // Генерируем UUID в Java, так как R2DBC требует заполненного ID при явном Insert
-            isNew = true;
-        }
         return UserEntity.builder()
-                .id(id)
+                .id(user.getId())
+                .uuid(user.getUuid() != null ? user.getUuid() : UUID.randomUUID()) // Генерируем UUID в Java при создании новой сущности
                 .email(user.getEmail())
                 .password(user.getPassword())
                 .role(user.getRole())
@@ -69,7 +71,6 @@ public class UserRepositoryImpl implements UserRepository {
                 .mfaSecret(user.getMfaSecret())
                 .phoneNumber(user.getPhoneNumber())
                 .createdAt(user.getCreatedAt())
-                .isNew(isNew)
                 .build();
     }
 }

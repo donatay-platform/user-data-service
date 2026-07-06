@@ -51,6 +51,7 @@ public class ProfileController {
     private UserProfileResponse toResponse(User user) {
         return UserProfileResponse.builder()
                 .id(user.getId())
+                .uuid(user.getUuid())
                 .email(user.getEmail())
                 .nickname(user.getNickname())
                 .avatarUrl(user.getAvatarUrl())

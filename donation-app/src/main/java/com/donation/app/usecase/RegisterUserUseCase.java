@@ -26,8 +26,7 @@ public class RegisterUserUseCase {
                 .flatMap(existingUser -> Mono.<User>error(new DonationException("USER_ALREADY_EXISTS", "User with this email already exists")))
                 .switchIfEmpty(Mono.defer(() -> {
                     User newUser = User.builder()
-                            // Оставляем ID пустым для доменного сохранения, 
-                            // чтобы база сгенерировала его сама, либо задаем его при конвертации
+                            .uuid(java.util.UUID.randomUUID()) // Генерируем UUID для внешнего поиска
                             .email(email)
                             .password(passwordEncoder.encode(rawPassword))
                             .role("ROLE_USER")

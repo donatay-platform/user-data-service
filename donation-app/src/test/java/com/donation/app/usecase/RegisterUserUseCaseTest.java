@@ -38,7 +38,8 @@ class RegisterUserUseCaseTest {
         when(passwordEncoder.encode(password)).thenReturn("encodedPassword");
 
         User savedUser = User.builder()
-                .id(UUID.randomUUID())
+                .id(1L)
+                .uuid(UUID.randomUUID())
                 .email(email)
                 .password("encodedPassword")
                 .role("ROLE_USER")
@@ -58,7 +59,7 @@ class RegisterUserUseCaseTest {
         String password = "password";
 
         User existingUser = User.builder()
-                .id(UUID.randomUUID())
+                .id(1L)
                 .email(email)
                 .build();
 

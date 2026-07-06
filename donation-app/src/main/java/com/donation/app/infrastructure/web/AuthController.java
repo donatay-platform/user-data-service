@@ -34,6 +34,7 @@ public class AuthController {
         return registerUserUseCase.register(request.getEmail(), request.getPassword())
                 .map(user -> UserResponse.builder()
                         .id(user.getId())
+                        .uuid(user.getUuid())
                         .email(user.getEmail())
                         .role(user.getRole())
                         .build());

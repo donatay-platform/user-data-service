@@ -13,7 +13,8 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
-    private UUID id;
+    private Long id;         // Порядковый номер (Long)
+    private UUID uuid;       // Уникальный идентификатор (UUID)
     private String email;
     private String password;
     private String role;
@@ -25,10 +26,9 @@ public class User {
     
     // MFA Fields
     private boolean mfaEnabled;
-    private String mfaType; // "GOOGLE" or "SMS"
-    private String mfaSecret; // Google TOTP Secret or SMS last code
+    private String mfaType;
+    private String mfaSecret;
     private String phoneNumber;
     
     private LocalDateTime createdAt;
 }
-

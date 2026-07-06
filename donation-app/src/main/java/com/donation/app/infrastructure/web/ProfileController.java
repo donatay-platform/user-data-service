@@ -6,7 +6,6 @@ import com.donation.app.infrastructure.web.dto.UpdateProfileRequest;
 import com.donation.app.infrastructure.web.dto.UserProfileResponse;
 import com.donation.app.usecase.GetProfileUseCase;
 import com.donation.app.usecase.UpdateProfileUseCase;
-import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +16,6 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 @RestController
-@RequestMapping("/api/profile")
 @RequiredArgsConstructor
 @Tag(name = "Профиль", description = "Управление профилем пользователя")
 @SecurityRequirement(name = "BearerAuth")
@@ -27,9 +25,7 @@ public class ProfileController implements ProfileApi {
     private final UpdateProfileUseCase updateProfileUseCase;
 
     @Override
-    @GetMapping
-    @Operation(summary = "Получить профиль текущего авторизованного пользователя")
-    public Mono<ResponseEntity<UserProfileResponse>> getProfile(final ServerWebExchange exchange) {
+    public Mono<ResponseEntity<UserProfileResponse>> getProfile(ServerWebExchange exchange) {
         return ReactiveSecurityContextHolder.getContext()
                 .map(ctx -> ctx.getAuthentication().getName())
                 .flatMap(getProfileUseCase::getProfile)
@@ -37,14 +33,10 @@ public class ProfileController implements ProfileApi {
     }
 
     @Override
-    @PutMapping
-    @Operation(summary = "Редактировать данные профиля")
-    public Mono<ResponseEntity<UserProfileResponse>> updateProfile(
-            @RequestBody UpdateProfileRequest request,
-            final ServerWebExchange exchange) {
+    public Mono<ResponseEntity<UserProfileResponse>> updateProfile(Mono<UpdateProfileRequest> updateProfileRequest, ServerWebExchange exchange) {
         return ReactiveSecurityContextHolder.getContext()
                 .map(ctx -> ctx.getAuthentication().getName())
-                .flatMap(currentEmail -> updateProfileUseCase.updateProfile(
+                .flatMap(currentEmail -> updateProfileRequest.flatMap(request -> updateProfileUseCase.updateProfile(
                         currentEmail,
                         request.getNickname(),
                         request.getAvatarUrl(),
@@ -52,12 +44,12 @@ public class ProfileController implements ProfileApi {
                         request.getEmail(),
                         request.getPassword(),
                         request.getPhoneNumber()
-                ))
+                )))
                 .map(user -> ResponseEntity.ok(toResponse(user)));
     }
 
     private UserProfileResponse toResponse(User user) {
-        return UserProfileResponse.builder()
+        return new UserProfileResponse()
                 .id(user.getId())
                 .uuid(user.getUuid())
                 .email(user.getEmail())
@@ -67,7 +59,6 @@ public class ProfileController implements ProfileApi {
                 .role(user.getRole())
                 .mfaEnabled(user.isMfaEnabled())
                 .mfaType(user.getMfaType())
-                .phoneNumber(user.getPhoneNumber())
-                .build();
+                .phoneNumber(user.getPhoneNumber());
     }
 }

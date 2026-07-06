@@ -17,8 +17,8 @@ import java.util.UUID;
 @Table("users")
 public class UserEntity {
     @Id
-    private Long id;         // bigint автоинкрементный ID
-    private UUID uuid;       // Уникальный UUID для внешнего поиска
+    private Long id;
+    private UUID uuid;
     private String email;
     private String password;
     private String role;

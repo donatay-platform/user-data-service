@@ -23,7 +23,9 @@ public class GlobalExceptionHandler {
             default -> HttpStatus.INTERNAL_SERVER_ERROR;
         };
         return ResponseEntity.status(status)
-                .body(new ErrorResponse(ex.getCode(), ex.getMessage()));
+                .body(new ErrorResponse()
+                        .code(ex.getCode())
+                        .message(ex.getMessage()));
     }
 
     @ExceptionHandler(WebExchangeBindException.class)
@@ -35,12 +37,16 @@ public class GlobalExceptionHandler {
                 .collect(Collectors.joining(", "));
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(new ErrorResponse("VALIDATION_ERROR", details));
+                .body(new ErrorResponse()
+                        .code("VALIDATION_ERROR")
+                        .message(details));
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGeneralException(Exception ex) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(new ErrorResponse("INTERNAL_SERVER_ERROR", ex.getMessage()));
+                .body(new ErrorResponse()
+                        .code("INTERNAL_SERVER_ERROR")
+                        .message(ex.getMessage()));
     }
 }

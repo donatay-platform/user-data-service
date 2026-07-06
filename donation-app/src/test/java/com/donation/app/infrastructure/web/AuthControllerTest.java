@@ -1,8 +1,10 @@
 package com.donation.app.infrastructure.web;
 
+import com.donation.app.infrastructure.web.api.AuthenticationApi;
 import com.donation.app.infrastructure.web.dto.AuthRequest;
 import com.donation.app.infrastructure.web.dto.LoginResponse;
 import com.donation.app.infrastructure.web.dto.UserResponse;
+import com.donation.app.infrastructure.web.dto.MfaVerificationRequest;
 import com.donation.app.usecase.LoginUserUseCase;
 import com.donation.app.usecase.RegisterUserUseCase;
 import org.junit.jupiter.api.Test;
@@ -14,8 +16,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
-import java.util.UUID;
-
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.reactive.server.SecurityMockServerConfigurers.csrf;
 
@@ -34,13 +35,16 @@ class AuthControllerTest {
     @Test
     @WithMockUser
     void login_Success() {
-        AuthRequest request = AuthRequest.builder()
+        AuthRequest request = new AuthRequest()
                 .email("test@example.com")
-                .password("password123")
-                .build();
+                .password("password123");
+
+        LoginResponse loginResponse = new LoginResponse()
+                .mfaRequired(false)
+                .token("mockToken");
 
         when(loginUserUseCase.login("test@example.com", "password123"))
-                .thenReturn(Mono.just(LoginResponse.builder().mfaRequired(false).token("mockToken").build()));
+                .thenReturn(Mono.just(loginResponse));
 
         webTestClient.mutateWith(csrf())
                 .post()

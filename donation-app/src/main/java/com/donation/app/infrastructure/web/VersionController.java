@@ -2,12 +2,9 @@ package com.donation.app.infrastructure.web;
 
 import com.donation.app.infrastructure.web.api.VersionApi;
 import com.donation.app.infrastructure.web.dto.AppVersionResponse;
-import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
@@ -18,16 +15,12 @@ import java.time.format.DateTimeFormatter;
 import java.util.Properties;
 
 @RestController
-@RequestMapping("/api/version")
 @RequiredArgsConstructor
 @Tag(name = "Версионирование", description = "Получение информации о текущей версии сервиса")
 public class VersionController implements VersionApi {
 
     @Override
-    @GetMapping
-    @Operation(summary = "Получить информацию о версии сервиса", 
-               description = "Возвращает версию в формате: Мажорная.Релизная.Дата.Время.ХэшКомита")
-    public Mono<ResponseEntity<AppVersionResponse>> getVersion(final ServerWebExchange exchange) {
+    public Mono<ResponseEntity<AppVersionResponse>> getVersion(ServerWebExchange exchange) {
         return Mono.fromCallable(() -> {
             String commitHash = "unknown";
             String buildTime = LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
@@ -50,12 +43,11 @@ public class VersionController implements VersionApi {
 
             String fullVersion = String.format("1.1.%s.%s.%s", formattedDate, formattedTime, commitHash);
 
-            return ResponseEntity.ok(AppVersionResponse.builder()
+            return ResponseEntity.ok(new AppVersionResponse()
                     .name("donation-app")
                     .version(fullVersion)
                     .commitHash(commitHash)
-                    .buildTime(buildTime)
-                    .build());
+                    .buildTime(buildTime));
         });
     }
 }

@@ -63,6 +63,7 @@ public class UserRepositoryImpl implements UserRepository {
                 .mfaSecret(user.getMfaSecret())
                 .phoneNumber(user.getPhoneNumber())
                 .createdAt(user.getCreatedAt())
+                .isNew(user.getId() == null) // Если ID в домене пустой - значит сущность абсолютно новая
                 .build();
     }
 }

@@ -26,7 +26,8 @@ public class RegisterUserUseCase {
                 .flatMap(existingUser -> Mono.<User>error(new DonationException("USER_ALREADY_EXISTS", "User with this email already exists")))
                 .switchIfEmpty(Mono.defer(() -> {
                     User newUser = User.builder()
-                            .id(java.util.UUID.randomUUID()) // Явно генерируем UUID на стороне приложения для реактивного R2DBC
+                            // Оставляем ID пустым для доменного сохранения, 
+                            // чтобы база сгенерировала его сама, либо задаем его при конвертации
                             .email(email)
                             .password(passwordEncoder.encode(rawPassword))
                             .role("ROLE_USER")

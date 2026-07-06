@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.domain.Persistable;
 import org.springframework.data.relational.core.mapping.Table;
 
@@ -34,6 +35,10 @@ public class UserEntity implements Persistable<UUID> {
     
     private LocalDateTime createdAt;
 
+    @Transient
+    @Builder.Default
+    private boolean isNew = true;
+
     @Override
     public UUID getId() {
         return id;
@@ -41,6 +46,7 @@ public class UserEntity implements Persistable<UUID> {
 
     @Override
     public boolean isNew() {
-        return id == null;
+        return isNew;
     }
 }
+

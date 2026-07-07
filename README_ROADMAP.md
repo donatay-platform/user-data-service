@@ -16,7 +16,7 @@
 - [ ] архитектура не ломает разделение слоёв;
 - [ ] OpenAPI-спецификация обновлена, если меняется API;
 - [ ] Liquibase-миграции добавлены, если меняется БД;
-- [ ] новые Liquibase changeset id уникальны и начинаются с первых 10 цифр текущего epoch millis, например `1762500000-create-table`; если в одну секунду нужно несколько changeset-ов, добавляем короткий суффикс;
+- [ ] новые Liquibase changeset id уникальны и начинаются с первых 10 цифр текущего epoch millis, например `1762500000-create-table`;
 - [ ] тесты добавлены или обновлены;
 - [ ] покрытие JaCoCo не ниже 70%;
 - [ ] проверяется не только line/instruction coverage, но и branch coverage;
@@ -213,7 +213,7 @@ MVP — это минимальная версия продукта, в кото
 - [ ] Разделить OpenAPI-контракты auth и user-data.
 - [x] Перенести базовую регистрацию/логин/JWT/MFA-login из текущего backend в `auth-service`.
 - [x] Перенести setup/verify MFA и SMS-code flow в `auth-service`.
-- [ ] Перенести security audit в `auth-service`.
+- [x] Перенести security audit в `auth-service`.
 - [ ] Оставить профиль пользователя и публичные данные в `user-data-service`.
 - [ ] Настроить взаимодействие сервисов через JWT subject/user UUID.
 - [ ] Обновить frontend API URLs после разделения сервисов.
@@ -493,3 +493,4 @@ MVP — это минимальная версия продукта, в кото
 - [x] 2026-07-07 — текущий backend-репозиторий переименован в `donatay-platform/user-data-service`; для backend-сервисов введены отдельные PostgreSQL-схемы `auth_service` и `user_data_service` в одной БД.
 - [x] 2026-07-07 — добавлено правило именования новых Liquibase changeset id через первые 10 цифр текущего epoch millis.
 - [x] 2026-07-07 — в `auth-service` перенесены setup Google MFA, setup SMS MFA, отправка SMS-кода и verify/enable MFA.
+- [x] 2026-07-07 — в `auth-service` добавлен security audit: таблица `auth_service.security_audit_events`, порт `SecurityAuditLog`, persistence adapter и запись событий регистрации, логина и MFA.

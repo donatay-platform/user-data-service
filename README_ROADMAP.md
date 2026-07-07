@@ -190,7 +190,29 @@ MVP — это минимальная версия продукта, в кото
 
 ---
 
-# 2. Clean Architecture refactoring
+# 2. Service split и Clean Architecture refactoring
+
+Цель этапа: разделить backend на сервисы по ответственности и сделать так, чтобы бизнес-логика не зависела от web, JWT и инфраструктуры.
+
+## 2.0. Разделение backend-сервисов
+
+- [x] Создать репозиторий `donatay-platform/auth-service`.
+- [x] Настроить доступ агента к `auth-service`.
+- [x] Инициализировать базовый Spring Boot 3 + Java 21 каркас `auth-service`.
+- [x] Добавить Maven Wrapper в `auth-service`.
+- [x] Добавить профили `local`, `test`, `prod` в `auth-service`.
+- [x] Добавить базовый `/api/version` в `auth-service`.
+- [x] Настроить JaCoCo instruction + branch coverage 70%+ в `auth-service`.
+- [x] Добавить первый тест `auth-service` и проверить `./mvnw test`.
+- [ ] Уточнить целевое имя текущего backend-сервиса: `user-data-service`.
+- [ ] Создать/перенести репозиторий `user-data-service` в `donatay-platform`.
+- [ ] Разделить OpenAPI-контракты auth и user-data.
+- [ ] Перенести регистрацию/логин/JWT/MFA из текущего backend в `auth-service`.
+- [ ] Оставить профиль пользователя и публичные данные в `user-data-service`.
+- [ ] Настроить взаимодействие сервисов через JWT subject/user UUID.
+- [ ] Обновить frontend API URLs после разделения сервисов.
+
+## 2.1. Clean Architecture внутри сервисов
 
 Цель этапа: сделать так, чтобы бизнес-логика не зависела от web, JWT и инфраструктуры.
 
@@ -442,6 +464,7 @@ MVP — это минимальная версия продукта, в кото
 - [x] `1.2` Убрать секреты из конфигурации.
 - [x] `1.3` Закрыть CORS.
 - [x] `1.4` Настроить честное покрытие JaCoCo.
+- [x] `2.0` Создать и инициализировать `auth-service`.
 - [ ] `2.1` Развязать use case-и от web DTO и infrastructure.
 - [ ] `3.1` Перевести JWT subject с email на UUID.
 - [ ] `3.2` Переделать MFA flow.
@@ -459,3 +482,4 @@ MVP — это минимальная версия продукта, в кото
 - [x] 2026-07-07 — выполнен пункт `1.2`: конфигурация разделена на `local`, `test`, `prod`, секреты убраны из общего конфига, production-секреты требуют env-переменные.
 - [x] 2026-07-07 — выполнен пункт `1.3`: CORS закрыт на явный список origin-ов, добавлены настройки origin-ов по профилям и тесты public/protected endpoints + CORS preflight.
 - [x] 2026-07-07 — выполнен пункт `1.4`: JaCoCo теперь проверяет instruction и branch coverage 70%+, убраны лишние исключения, добавлены тесты use case, web, security, MFA и version-слоёв.
+- [x] 2026-07-07 — создан и инициализирован отдельный репозиторий `donatay-platform/auth-service` для будущего выноса регистрации, логина, JWT, MFA и security audit.

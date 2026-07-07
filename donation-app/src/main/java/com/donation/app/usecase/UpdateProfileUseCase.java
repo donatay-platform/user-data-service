@@ -27,8 +27,8 @@ public class UpdateProfileUseCase {
                     Mono<Void> emailCheck = Mono.empty();
                     if (newEmail != null && !newEmail.equalsIgnoreCase(currentEmail)) {
                         emailCheck = userRepository.findByEmail(newEmail)
-                                .flatMap(existing -> Mono.error(new DonationException("EMAIL_TAKEN", "Email already taken")))
-                                .then(Mono.fromRunnable(() -> user.setEmail(newEmail)));
+                                .flatMap(existing -> Mono.<Void>error(new DonationException("EMAIL_TAKEN", "Email already taken")))
+                                .switchIfEmpty(Mono.fromRunnable(() -> user.setEmail(newEmail)));
                     }
 
                     if (newPassword != null && !newPassword.isBlank()) {
@@ -38,7 +38,7 @@ public class UpdateProfileUseCase {
                         user.setPassword(passwordEncoder.encode(newPassword));
                     }
 
-                    return emailCheck.then(userRepository.save(user));
+                    return emailCheck.then(Mono.defer(() -> userRepository.save(user)));
                 });
     }
 }

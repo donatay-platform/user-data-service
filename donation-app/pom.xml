@@ -193,25 +193,20 @@
                                             <value>COVEREDRATIO</value>
                                             <minimum>0.70</minimum>
                                         </limit>
+                                        <limit>
+                                            <counter>BRANCH</counter>
+                                            <value>COVEREDRATIO</value>
+                                            <minimum>0.70</minimum>
+                                        </limit>
                                     </limits>
                                 </rule>
                             </rules>
                             <excludes>
                                 <exclude>com/donation/app/infrastructure/web/dto/**</exclude>
+                                <exclude>com/donation/app/infrastructure/web/api/**</exclude>
                                 <exclude>com/donation/app/domain/User**</exclude>
                                 <exclude>com/donation/app/infrastructure/persistence/UserEntity**</exclude>
                                 <exclude>com/donation/app/DonationApplication**</exclude>
-                                <exclude>com/donation/app/infrastructure/mfa/GoogleAuthService**</exclude>
-                                <exclude>com/donation/app/infrastructure/security/**</exclude>
-                                <exclude>com/donation/app/usecase/SetupGoogleMfaUseCase**</exclude>
-                                <exclude>com/donation/app/usecase/SetupSmsMfaUseCase**</exclude>
-                                <exclude>com/donation/app/usecase/SendSmsCodeUseCase**</exclude>
-                                <exclude>com/donation/app/usecase/VerifyAndEnableMfaUseCase**</exclude>
-                                <exclude>com/donation/app/usecase/GetProfileUseCase**</exclude>
-                                <exclude>com/donation/app/infrastructure/web/MfaController**</exclude>
-                                <exclude>com/donation/app/infrastructure/web/ProfileController**</exclude>
-                                <exclude>com/donation/app/infrastructure/web/VersionController**</exclude>
-                                <exclude>com/donation/app/infrastructure/web/api/**</exclude>
                             </excludes>
                         </configuration>
                     </execution>

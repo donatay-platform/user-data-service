@@ -25,7 +25,6 @@ public class CreateUserProfileUseCase {
         }
 
         return userRepository.findByUuid(userUuid)
-                .flatMap(existing -> Mono.<User>error(new DonationException("PROFILE_ALREADY_EXISTS", "User profile already exists")))
                 .switchIfEmpty(Mono.defer(() -> userRepository.save(User.builder()
                         .uuid(userUuid)
                         .email(email)

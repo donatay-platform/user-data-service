@@ -220,6 +220,7 @@ MVP — это минимальная версия продукта, в кото
 - [x] Настроить взаимодействие сервисов через JWT subject/user UUID.
 - [x] Добавить синхронное создание профиля в `user-data-service` после регистрации в `auth-service`.
 - [x] Защитить internal profile endpoint через `INTERNAL_SERVICE_TOKEN`.
+- [x] Сделать `POST /internal/users` идемпотентным по `uuid` пользователя.
 - [ ] Обновить frontend API URLs после разделения сервисов.
 
 ## 2.1. Clean Architecture внутри сервисов
@@ -503,3 +504,4 @@ MVP — это минимальная версия продукта, в кото
 - [x] 2026-07-07 — `user-data-service` очищен от старой auth/MFA-логики: удалены auth/MFA controllers/use cases, user-data OpenAPI оставляет только profile/version, profile update больше не меняет email/password.
 - [x] 2026-07-07 — согласован JWT contract между сервисами: общий `JWT_SECRET`, общий `JWT_ISSUER`, `subject=userUuid`, claim `role`, TTL 900 секунд по умолчанию; добавлены тесты на issuer, битый и просроченный токен.
 - [x] 2026-07-07 — добавлена синхронизация регистрации: `auth-service` после создания auth user вызывает `user-data-service` `POST /internal/users`, endpoint защищён `INTERNAL_SERVICE_TOKEN`.
+- [x] 2026-07-07 — `POST /internal/users` сделан идемпотентным: повторный запрос с тем же `uuid` возвращает существующий профиль и не создаёт дубль.

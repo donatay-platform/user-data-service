@@ -123,6 +123,8 @@ Body: { "uuid": "...", "email": "user@example.com" }
 
 Этот endpoint не предназначен для frontend. Значение `INTERNAL_SERVICE_TOKEN` должно совпадать с настройкой в `auth-service`.
 
+Endpoint идемпотентный: повторный запрос с тем же `uuid` считается успешным и не создаёт дубль профиля.
+
 Swagger UI после запуска:
 
 ```text

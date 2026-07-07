@@ -12,6 +12,8 @@ import reactor.test.StepVerifier;
 import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 class CreateUserProfileUseCaseTest {
@@ -47,12 +49,19 @@ class CreateUserProfileUseCaseTest {
     }
 
     @Test
-    void createProfile_RejectsExistingProfile() {
+    void createProfile_IsIdempotentWhenProfileAlreadyExists() {
         UUID uuid = UUID.randomUUID();
-        when(userRepository.findByUuid(uuid)).thenReturn(Mono.just(User.builder().uuid(uuid).build()));
+        User existing = User.builder()
+                .uuid(uuid)
+                .email("user@example.com")
+                .nickname("ExistingNick")
+                .build();
+        when(userRepository.findByUuid(uuid)).thenReturn(Mono.just(existing));
 
         StepVerifier.create(useCase.createProfile(uuid, "user@example.com"))
-                .expectErrorMatches(error -> error instanceof DonationException && "PROFILE_ALREADY_EXISTS".equals(((DonationException) error).getCode()))
-                .verify();
+                .expectNext(existing)
+                .verifyComplete();
+
+        verify(userRepository, never()).save(any(User.class));
     }
 }

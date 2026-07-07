@@ -32,6 +32,15 @@ docker compose up -d
 
 По умолчанию локальный PostgreSQL доступен на порту `5435`.
 
+На этапе MVP используем одну PostgreSQL-базу для нескольких backend-сервисов, но каждый сервис живёт в своей схеме:
+
+```text
+auth-service      -> schema auth_service
+user-data-service -> schema user_data_service
+```
+
+Этот сервис использует схему `user_data_service`.
+
 ## Запуск приложения локально
 
 Сначала подними локальную базу:

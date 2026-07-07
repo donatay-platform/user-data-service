@@ -69,3 +69,18 @@ databaseChangeLog:
                   type: TIMESTAMP
                   constraints:
                     nullable: false
+
+  - changeSet:
+      id: 2
+      author: arena-agent
+      comment: Move user data tables from public schema to dedicated service schema.
+      changes:
+        - sql:
+            splitStatements: true
+            stripComments: true
+            sql: |
+              CREATE SCHEMA IF NOT EXISTS user_data_service;
+              ALTER SEQUENCE IF EXISTS public.users_id_seq SET SCHEMA user_data_service;
+              ALTER TABLE IF EXISTS public.users SET SCHEMA user_data_service;
+              ALTER TABLE IF EXISTS user_data_service.users
+                ALTER COLUMN id SET DEFAULT nextval('user_data_service.users_id_seq');

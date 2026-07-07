@@ -204,8 +204,11 @@ MVP — это минимальная версия продукта, в кото
 - [x] Добавить базовый `/api/version` в `auth-service`.
 - [x] Настроить JaCoCo instruction + branch coverage 70%+ в `auth-service`.
 - [x] Добавить первый тест `auth-service` и проверить `./mvnw test`.
-- [ ] Уточнить целевое имя текущего backend-сервиса: `user-data-service`.
-- [ ] Создать/перенести репозиторий `user-data-service` в `donatay-platform`.
+- [x] Уточнить целевое имя текущего backend-сервиса: `user-data-service`.
+- [x] Создать/перенести репозиторий `user-data-service` в `donatay-platform`.
+- [x] Настроить отдельные PostgreSQL-схемы под backend-сервисы в одной БД:
+  - `auth_service`;
+  - `user_data_service`.
 - [ ] Разделить OpenAPI-контракты auth и user-data.
 - [x] Перенести базовую регистрацию/логин/JWT/MFA-login из текущего backend в `auth-service`.
 - [ ] Перенести setup/verify MFA, SMS-code flow и security audit в `auth-service`.
@@ -485,3 +488,4 @@ MVP — это минимальная версия продукта, в кото
 - [x] 2026-07-07 — выполнен пункт `1.4`: JaCoCo теперь проверяет instruction и branch coverage 70%+, убраны лишние исключения, добавлены тесты use case, web, security, MFA и version-слоёв.
 - [x] 2026-07-07 — создан и инициализирован отдельный репозиторий `donatay-platform/auth-service` для будущего выноса регистрации, логина, JWT, MFA и security audit.
 - [x] 2026-07-07 — в `auth-service` перенесены базовые auth endpoints: регистрация, логин, MFA-login, JWT, auth persistence skeleton и Liquibase-схема `auth_users`.
+- [x] 2026-07-07 — текущий backend-репозиторий переименован в `donatay-platform/user-data-service`; для backend-сервисов введены отдельные PostgreSQL-схемы `auth_service` и `user_data_service` в одной БД.

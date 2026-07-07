@@ -14,7 +14,7 @@ import java.util.UUID;
 @Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
-@Table("users")
+@Table(schema = "user_data_service", name = "users")
 public class UserEntity {
     @Id
     private Long id;

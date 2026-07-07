@@ -12,7 +12,7 @@ class JwtProviderTest {
 
     @BeforeEach
     void setUp() {
-        jwtProvider = new JwtProvider("mySuperSecretKeyForJWTAuthThatIsVeryLongAndSecure123456!", 3600);
+        jwtProvider = new JwtProvider("test-jwt-secret-at-least-32-characters-long", 3600);
     }
 
     @Test

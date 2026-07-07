@@ -2,23 +2,15 @@ spring:
   application:
     name: donation-app
 
-  # Liquibase configuration (uses normal spring-jdbc for auto-run migration on reactive startup)
-  liquibase:
-    change-log: classpath:db/changelog/db.changelog-master.yaml
-    url: ${SPRING_LIQUIBASE_URL:jdbc:postgresql://localhost:5435/donation_db}
-    user: ${SPRING_LIQUIBASE_USER:postgres}
-    password: ${SPRING_LIQUIBASE_PASSWORD:mySecurePassword123}
-    enabled: true
-
-  # R2DBC configuration (used by Spring Data R2DBC for reactive work)
-  r2dbc:
-    url: ${SPRING_R2DBC_URL:r2dbc:postgresql://localhost:5435/donation_db}
-    username: ${SPRING_R2DBC_USERNAME:postgres}
-    password: ${SPRING_R2DBC_PASSWORD:mySecurePassword123}
-
-  # We disable standard JDBC autoconfig to keep the project strictly reactive
   autoconfigure:
     exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+    enabled: false
+
+server:
+  port: ${SERVER_PORT:8080}
 
 logging:
   level:
@@ -26,13 +18,3 @@ logging:
     org.springframework: INFO
     org.springframework.data.r2dbc: INFO
     io.r2dbc: INFO
-
-
-
-
-
-
-# JWT Configuration
-jwt:
-  secret: "mySuperSecretKeyForJWTAuthThatIsVeryLongAndSecure123456!"
-  expiration: 3600 # 1 hour

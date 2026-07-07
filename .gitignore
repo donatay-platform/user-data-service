@@ -25,7 +25,7 @@ Thumbs.db
 # Secrets & Local Env
 .env
 .env.*
-application-local.yml
+application-*.local.yml
 *.log
 
 # Maven Wrapper files are intentionally committed:

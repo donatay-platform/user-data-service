@@ -1,0 +1,12 @@
+spring:
+  liquibase:
+    enabled: false
+
+  r2dbc:
+    url: ${SPRING_R2DBC_URL:r2dbc:h2:mem:///donation_test_db;MODE=PostgreSQL;DB_CLOSE_DELAY=-1}
+    username: ${SPRING_R2DBC_USERNAME:sa}
+    password: ${SPRING_R2DBC_PASSWORD:}
+
+jwt:
+  secret: ${JWT_SECRET:test-jwt-secret-at-least-32-characters-long}
+  expiration: ${JWT_EXPIRATION_SECONDS:3600}

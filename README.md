@@ -34,8 +34,32 @@ docker compose up -d
 
 ## Запуск приложения локально
 
+Сначала подними локальную базу:
+
 ```bash
-./mvnw -pl donation-app spring-boot:run
+cd donation-app
+docker compose up -d
+cd ..
+```
+
+Потом запусти приложение с профилем `local`:
+
+```bash
+./mvnw -pl donation-app spring-boot:run -Dspring-boot.run.profiles=local
+```
+
+Локальный профиль использует безопасные dev-значения. Для production нужно явно передать секреты через env-переменные.
+
+Минимальные production-переменные:
+
+```bash
+SPRING_LIQUIBASE_URL=jdbc:postgresql://host:5432/donation_db
+SPRING_LIQUIBASE_USER=...
+SPRING_LIQUIBASE_PASSWORD=...
+SPRING_R2DBC_URL=r2dbc:postgresql://host:5432/donation_db
+SPRING_R2DBC_USERNAME=...
+SPRING_R2DBC_PASSWORD=...
+JWT_SECRET=...
 ```
 
 Swagger UI после запуска:

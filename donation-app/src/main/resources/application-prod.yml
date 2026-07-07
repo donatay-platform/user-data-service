@@ -1,0 +1,22 @@
+spring:
+  liquibase:
+    enabled: true
+    url: ${SPRING_LIQUIBASE_URL}
+    user: ${SPRING_LIQUIBASE_USER}
+    password: ${SPRING_LIQUIBASE_PASSWORD}
+
+  r2dbc:
+    url: ${SPRING_R2DBC_URL}
+    username: ${SPRING_R2DBC_USERNAME}
+    password: ${SPRING_R2DBC_PASSWORD}
+
+jwt:
+  secret: ${JWT_SECRET}
+  expiration: ${JWT_EXPIRATION_SECONDS:3600}
+
+logging:
+  level:
+    root: INFO
+    org.springframework: WARN
+    org.springframework.data.r2dbc: WARN
+    io.r2dbc: WARN
